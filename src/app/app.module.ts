@@ -1,0 +1,47 @@
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
+import { DataServiceService } from "./data-service.service";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { StockDetailComponent } from './stock-detail/stock-detail.component';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { HttpClientModule } from '@angular/common/http';
+//import { DashboardComponent } from './dashboard/dashboard.component';
+//import { IgxGridModule } from "igniteui-angular";
+//import { IgxSparklineModule } from "igniteui-angular-charts";
+
+const routes: Routes = [
+  { path: 'detail', component: StockDetailComponent },
+  { path: 'dashboard', component: DashboardComponent }
+//  { path: 'second-component', component: SecondComponent },
+];
+@NgModule({
+  declarations: [
+    AppComponent,
+    StockDetailComponent,
+    DashboardComponent,
+    //DashboardComponent,
+  ],
+  imports: [
+    NgApexchartsModule,
+    BrowserModule,
+    CommonModule,
+    FormsModule,
+    IgxFinancialChartModule,
+    IgxLegendModule,
+    AppRoutingModule,
+    HttpClientModule,
+  //  IgxGridModule,
+    //IgxSparklineModule,
+    RouterModule.forRoot(routes)
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+
+      <div class="header" style="display: flex;">
+        <img src="../../assets/logo.svg" alt="">
+        <h2>SFlare</h2>
+      </div>
+
+      <div class="content">
+        <div class="sidebar">
+
+        </div>
+
+        <div class="stock-content">
+            <div class="top-stock">
+              <div class="stockBox" *ngFor="let i of [1,2,3,4,5]">
+                <div class="box-head">
+                  <span class ="stock-name">FPT</span>
+                  <div class="stock-status">
+                    <p style="font-weight: bold;">FPT</p>
+                    <p class="green">+11.39 +0.68%</p>
+                </div>
+                </div>
+                <div class="box-body">
+                  <div class="box-coefficient">
+                    <p class="text-italic">Total</p>
+                    <p class="text-bold">$15.215.70</p>
+                  </div>
+                  <div class="chart-spark">
+                    <apx-chart
+                      #chartspark2
+                      [series]="chartAreaSparkline3Options.series!"
+                      [chart]="commonAreaSparlineOptions.chart!"
+                      [colors]="chartAreaSparkline3Options.colors!"
+
+                    ></apx-chart>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="chart-field">
+              <div class="stock-chart">
+                <div class="ig-chart vertical">
+                  <div class="options vertical" >
+                      <label id="legendTitle">Stock Changes: Microsoft vs Google </label>
+                  </div>
+
+                  <igx-financial-chart height="100%" width="100%"
+                  [dataSource]="data"
+                  chartType="line"
+                  thickness=2
+                  yAxisMode="PercentChange"
+                  yAxisTitle="Percent Changed">
+                  </igx-financial-chart>
+              </div>
+              </div>
+              <div class="stock-info">
+                <span class="stock-info-name">
+                  <h3>FPT 500</h3>
+                </span>
+                <div class="item-info">
+                  <p class="info-key">Previous Close</p>
+                  <p class="info-value">45,566,48</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Day Range</p>
+                  <p class="info-value">4,5433,94 - 4,598,53</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Year Range</p>
+                  <p class="info-value">4,5433,94 - 4,598,53</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Market Cap</p>
+                  <p class="info-value">$40,3T USD/p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Volume</p>
+                  <p class="info-value">2,934,736</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Dividend Yield</p>
+                  <p class="info-value">1,48%</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">P/E Ratio/p>
+                  <p class="info-value">31.08</p>
+                </div>
+                <div class="item-info">
+                  <p class="info-key">Previous Close</p>
+                  <p class="info-value">INDEX</p>
+                </div>
+              </div>
+
+            </div>
+        </div>
+
+
+      </div>
+
+
+
+
+    </div>
+
+</body>
+</html>
