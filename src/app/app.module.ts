@@ -17,7 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
 //import { IgxSparklineModule } from "igniteui-angular-charts";
 
 const routes: Routes = [
-  { path: 'detail', component: StockDetailComponent },
+  { path: 'detail/:param', component: StockDetailComponent },
+  { path: 'detail/:param1/:param2', component: StockDetailComponent },
   { path: 'dashboard', component: DashboardComponent }
 //  { path: 'second-component', component: SecondComponent },
 ];

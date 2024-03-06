@@ -10,6 +10,10 @@ export class StockServiceService {
   constructor( private http: HttpClient) { }
 
   getDataTest():Observable<any> {
-    return this.http.get<any>("https://catfact.ninja/fact");
+    return this.http.get<any>("https://localhost:7047/getall/VN30");
+  }
+
+  getStockByCode(code: string): Observable<any> {
+    return this.http.get<any>("https://localhost:7047/"+code)
   }
 }

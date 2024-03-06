@@ -1,4 +1,3 @@
-<p>dashboard works!</p>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,15 +6,83 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="chart-spark2" height="500px">
-    <apx-chart
+    <div class="wrapper">
 
-      #chartspark2
-      [series]="chartAreaSparkline3Options.series!"
-      [chart]="commonAreaSparlineOptions.chart!"
-      [colors]="chartAreaSparkline3Options.colors!"
+      <div class="header" style="display: flex;">
+        <img src="../../assets/logo.svg" alt="">
+        <h2>SFlare</h2>
+      </div>
 
-    ></apx-chart>
-  </div>
+      <div class="content">
+        <table class="table stock-table table-striped table-bordered table-dark">
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2">Mã CK</th>
+              <th scope="col" rowspan="2">T.C</th>
+              <th scope="col" rowspan="2">Trần</th>
+              <th scope="col" rowspan="2">Sàn</th>
+              <th scope="col" colspan="6"> Bên mua</th>
+              <th scope="col" colspan="6"> Bên bán</th>
+              <th scope="col" rowspan="2">Tổng KL</th>
+              <th scope="col" rowspan="2">Dư mua</th>
+              <th scope="col" rowspan="2">Dư bán</th>
+              <th scope="col" rowspan="2">TB</th>
+              <th scope="col" rowspan="2">Cao</th>
+              <th scope="col" rowspan="2">Thấp</th>
+            </tr>
+            <tr >
+              <th>Giá 3</th>
+              <th>KL 3</th>
+              <th>Giá 2</th>
+              <th>KL 2</th>
+              <th>Giá 1</th>
+              <th>KL 1</th>
+
+              <th>Giá 1</th>
+              <th>Giá 1</th>
+              <th>Giá 2</th>
+              <th>KL 2</th>
+              <th>Giá 3</th>
+              <th>KL 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of stockList; let id = index">
+              <th scope="row" (click)="getStockHistory($event, id)" style="cursor: pointer;">{{i.stockCode}}</th>
+              <td [ngClass]="{'even-row': id % 2 !== 0, 'odd-row': id % 2 === 0}" style="color: #ffd900;">{{i.tc}}</td>
+              <td [ngClass]="{'even-row': id % 2 !== 0, 'odd-row': id % 2 === 0}" style="color: #ff25ff;">{{i.tran}}</td>
+              <td [ngClass]="{'even-row': id % 2 !== 0, 'odd-row': id % 2 === 0}" style="color: #1eeeee;">{{i.san}}</td>
+
+              <td class="{{i.mua1 < i.tc ? 'text-red' : 'text-green'}}"  >{{i.mua1}}</td>
+              <td class="{{i.mua1 < i.tc ? 'text-red' : 'text-green'}}">{{i.klm1}}</td>
+              <td class="{{i.mua2 < i.tc ? 'text-red' : 'text-green'}}">{{i.mua2}}</td>
+              <td class="{{i.mua2 < i.tc ? 'text-red' : 'text-green'}}">{{i.klm2}}</td>
+              <td class="{{i.mua3 < i.tc ? 'text-red' : 'text-green'}}">{{i.mua3}}</td>
+              <td class="{{i.mua3 < i.tc ? 'text-red' : 'text-green'}}">{{i.klm3}}</td>
+              <td class="{{i.ban1 < i.tc ? 'text-red' : 'text-green'}}">{{i.ban1}}</td>
+              <td class="{{i.ban1 < i.tc ? 'text-red' : 'text-green'}}">{{i.klb1}}</td>
+              <td class="{{i.ban2 < i.tc ? 'text-red' : 'text-green'}}">{{i.ban2}}</td>
+              <td class="{{i.ban2 < i.tc ? 'text-red' : 'text-green'}}">{{i.klb2}}</td>
+              <td class="{{i.ban3 < i.tc ? 'text-red' : 'text-green'}}">{{i.ban3}}</td>
+              <td class="{{i.ban3 < i.tc ? 'text-red' : 'text-green'}}">{{i.klb3}}</td>
+              <td >{{i.tongKL}}</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+
+
+
+    </div>
+
 </body>
 </html>

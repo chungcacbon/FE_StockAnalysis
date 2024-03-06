@@ -1,3 +1,4 @@
+import { DataServiceService } from './../data-service.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   ChartComponent,
@@ -12,6 +13,9 @@ import {
   ApexPlotOptions,
   ApexYAxis
 } from "ng-apexcharts";
+import { StockServiceService } from '../stock-service.service';
+import { Router } from '@angular/router';
+
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -64,12 +68,15 @@ const sparkLineData = [
   46
 ];
 
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  isError: boolean = true;
+  public stockList : any[] = [];
   @ViewChild("chart") chart?: ChartComponent;
   public chartOptions?: Partial<ChartOptions>;
   public chartAreaSparkline1Options: Partial<ChartOptions>;
@@ -157,7 +164,7 @@ export class DashboardComponent {
     }
   };
 
-  constructor() {
+  constructor(private  stockService:StockServiceService, private router:Router) {
     // setting global apex options which are applied on all charts on the page
     window.Apex = {
       stroke: {
@@ -266,6 +273,45 @@ export class DashboardComponent {
 
 
   }
+  ngOnInit(): void {
+    let stockG1:any;
+
+    this.stockService.getDataTest().subscribe((data : any[]) => {
+      data.forEach((dataItem : any) => {
+        let m1 = dataItem.g1.split("|");
+        let m2 = dataItem.g2.split("|");
+        let m3 = dataItem.g3.split("|");
+        let b1 = dataItem.g4.split("|");
+        let b2 = dataItem.g5.split("|");
+        let b3 = dataItem.g6.split("|");
+        this.stockList.push({
+          stockCode:dataItem.sym,
+          tc:dataItem.r,
+          tran:dataItem.c,
+          san:dataItem.f,
+          mua1 : m1[0],
+          klm1 : m1[1],
+          mua2 : m2[0],
+          klm2 : m2[1],
+          mua3 : m3[0],
+          klm3 : m3[1],
+          ban1 : b1[0],
+          klb1 : b1[1],
+          ban2 : b2[0],
+          klb2 : b2[1],
+          ban3 : b3[0],
+          klb3 : b3[1],
+          tongKL : dataItem.lot,
+
+        });
+      })
+
+      console.log(this.stockList)
+
+    });
+
+
+  }
 
   public randomizeArray(arg:any): number[] {
     var array = arg.slice();
@@ -283,6 +329,11 @@ export class DashboardComponent {
     }
 
     return array;
+  }
+
+  getStockHistory(event: MouseEvent, rowIndex: number){
+    const stockCode = this.stockList[rowIndex].stockCode; ;
+    this.router.navigate(['/detail',stockCode]);
   }
 
 }

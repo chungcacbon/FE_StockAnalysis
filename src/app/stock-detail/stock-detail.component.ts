@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataServiceService } from '../data-service.service';
 import { ChartOptions } from '../dashboard/dashboard.component';
 import { ChartComponent } from 'ng-apexcharts';
+import { ActivatedRoute } from '@angular/router';
+import { concatMap, tap, forkJoin, of } from 'rxjs';
 const sparkLineData = [
   47,
   45,
@@ -29,9 +31,10 @@ const sparkLineData = [
   19,
   46
 ];
-
-
-
+let firstStockHistoryData :any;
+let secondStockHistoryData :any;
+let firstStockCode :string;
+let secondStockCode :string;
 @Component({
   selector: 'app-stock-detail',
   templateUrl: './stock-detail.component.html',
@@ -66,8 +69,8 @@ export class StockDetailComponent implements OnInit {
   };
 
   public data: any;
-    constructor(private dataService: DataServiceService, private stockService: StockServiceService) {
-        this.data = [ this.dataService.getGoog(), this.dataService.getMsft() ];
+    constructor(private dataService: DataServiceService, private stockService: StockServiceService, private route: ActivatedRoute) {
+
 
         window.Apex = {
           stroke: {
@@ -127,7 +130,62 @@ export class StockDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stockService.getDataTest().subscribe(data => {console.log(data);})
+    this.route.params.pipe(
+
+      concatMap((params : any) =>{
+        let numberOfParams:number = Object.keys(params).length;
+        console.log(numberOfParams)
+        if(numberOfParams ==1){
+          firstStockCode = params['param'];
+          this.stockService.getStockByCode(firstStockCode).subscribe(data =>{
+            firstStockHistoryData = data.map((data:any)=>{
+              return {...data, time: new Date(data.time)}})
+              firstStockHistoryData.title = firstStockCode;
+              this.data = [firstStockHistoryData];
+          });
+        }
+        if(numberOfParams == 2){
+          firstStockCode = params['param1'];
+          secondStockCode = params['param2'];
+          return forkJoin({
+            data1: this.stockService.getStockByCode(firstStockCode),
+            data2: this.stockService.getStockByCode(secondStockCode)
+          }).pipe(
+            tap(({data1, data2}) => {
+              firstStockHistoryData = data1.map((data:any)=>{
+                return {...data, time: new Date(data.time)}})
+                firstStockHistoryData.title = firstStockCode;
+              secondStockHistoryData = data2.map((data:any)=>{
+                return {...data, time: new Date(data.time)}})
+                secondStockHistoryData.title = secondStockCode;
+              this.data = [firstStockHistoryData, secondStockHistoryData];
+            })
+          )
+      }
+      else{
+        return of(null);
+      }
+    })
+
+    ).subscribe(data=>{})
+    // this.route.params.subscribe(params => {
+    //   let numberOfParams:number = Object.keys(params).length;
+    //   if (numberOfParams == 1){
+
+    //     this.stockService.getStockByCode("").subscribe(stock => {
+    //       firstStockHistoryData = stock.map((data:any)=>{
+    //         return {...data, time: new Date(data.time)}})
+    //         firstStockHistoryData.title="ACB"
+    //         this.data = [firstStockHistoryData];
+    //         console.log(firstStockHistoryData)
+    //      });
+    //   }
+    //   if(numberOfParams == 2){
+
+    //   }
+    // });
+
+   /// this.stockService.getDataTest().subscribe(data => {console.log(data);})
   }
 
   public randomizeArray(arg:any): number[] {
