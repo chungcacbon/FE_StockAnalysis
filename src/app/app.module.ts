@@ -12,6 +12,7 @@ import { StockDetailComponent } from './stock-detail/stock-detail.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HttpClientModule } from '@angular/common/http';
+
 //import { DashboardComponent } from './dashboard/dashboard.component';
 //import { IgxGridModule } from "igniteui-angular";
 //import { IgxSparklineModule } from "igniteui-angular-charts";

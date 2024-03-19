@@ -27,10 +27,12 @@ body{
 }
 
 .header{
+  display:  flex;
+  align-items: center;
   width: 100%;
   height: 78px;
   border: 1px  solid #ccc;
-  font-weight: bold !important;
+  font-weight: bolder !important;
 }
 
 .content{

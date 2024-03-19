@@ -24,15 +24,34 @@ body{
   width: 100%;
   background-color: #ffffff;
   position: relative;
+  display: flex;
+}
+.sidebar{
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  height: 300px; /* Example height, adjust as needed */
+  width: 400px; /* Example width, adjust as needed */
+}
+
+.sidebar div{
+  width: 140px;
+  height: 60px;
 }
 
 .header{
+  display:  flex;
+  align-items: center;
   width: 100%;
   height: 78px;
   border: 1px  solid #ccc;
-  font-weight: bold !important;
+  font-weight: bolder !important;
 }
-
+.header img{
+  cursor: pointer;
+}
 .content{
   display: inline-block;
   height: 1040px;
@@ -161,3 +180,37 @@ body{
 .info-value{
   font-weight: bold;
 }
+
+.export-stock{
+  padding: 12px;
+  background-color:#0d6efd ;
+  height: 70%;
+  border: none;
+  color: white;
+  border-radius: 10px;
+}
+
+.export-stock:hover{
+  opacity: 0.9;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+

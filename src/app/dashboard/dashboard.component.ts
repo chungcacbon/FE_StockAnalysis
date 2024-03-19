@@ -276,7 +276,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     let stockG1:any;
 
-    this.stockService.getDataTest().subscribe((data : any[]) => {
+    this.stockService.getStocksToday().subscribe((data : any[]) => {
       data.forEach((dataItem : any) => {
         let m1 = dataItem.g1.split("|");
         let m2 = dataItem.g2.split("|");

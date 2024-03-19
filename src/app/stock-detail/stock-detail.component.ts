@@ -3,11 +3,21 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataServiceService } from '../data-service.service';
 import { ChartOptions } from '../dashboard/dashboard.component';
 import { ChartComponent } from 'ng-apexcharts';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, tap, forkJoin, of } from 'rxjs';
+import { saveAs } from 'file-saver';
+import { ThisReceiver } from '@angular/compiler';
 const sparkLineData = [
   47,
   45,
+  54,
+  38,
+  56,
+  24,
+  65,
+  31,
+  37,
+  39,
   54,
   38,
   56,
@@ -29,12 +39,49 @@ const sparkLineData = [
   54,
   43,
   19,
+  54,
+  38,
+  56,
+  24,
+  65,
+  31,
+  37,
+  39,
+  62,
+  51,
+  35,
+  41,
+  35,
+  27,
+  93,
+  53,
+  61,
+  27,
+  54,
+  43,
+  19,
+  62,
+  51,
+  35,
+  41,
+  35,
+  27,
+  93,
+  53,
+  61,
+  27,
+  54,
+  43,
+  19,
   46
 ];
 let firstStockHistoryData :any;
 let secondStockHistoryData :any;
 let firstStockCode :string;
 let secondStockCode :string;
+let listTopStockName :string[] = ["FPT","GVR","PLX","SSI","VCB"];
+let top5Stocks :any[];
+let allSymStocks :string[];
 @Component({
   selector: 'app-stock-detail',
   templateUrl: './stock-detail.component.html',
@@ -44,11 +91,21 @@ let secondStockCode :string;
 
 
 export class StockDetailComponent implements OnInit {
+  allSymStocks :string[] = [];
+  selectedStock1:string ="";
+  selectedStock2:string ="";
+  display = "none";
+  stockToday: any;
+  topStocks:any[]=[];
+  isPopupOpen: boolean = false;
+  predictData:any;
   @ViewChild("chart") chart?: ChartComponent;
   public chartOptions?: Partial<ChartOptions>;
-  public chartAreaSparkline3Options: Partial<ChartOptions>;
-  public chartLineSparkline3Options: Partial<ChartOptions>;
-  public chartBarSparkline3Options: Partial<ChartOptions>;
+  public chartAreaSparkline3Options?: Partial<ChartOptions>;
+  public chartAreaSparkline3Options1?: Partial<ChartOptions>;
+  public chartAreaSparkline3Options2?: Partial<ChartOptions>;
+  public chartAreaSparkline3Options3?: Partial<ChartOptions>;
+  public chartAreaSparkline3Options4?: Partial<ChartOptions>;
   public commonAreaSparlineOptions: Partial<ChartOptions> = {
     chart: {
       type: "area",
@@ -69,67 +126,19 @@ export class StockDetailComponent implements OnInit {
   };
 
   public data: any;
-    constructor(private dataService: DataServiceService, private stockService: StockServiceService, private route: ActivatedRoute) {
-
-
-        window.Apex = {
-          stroke: {
-            width: 2
-          },
-          markers: {
-            size: 0
-          },
-          tooltip: {
-            fixed: {
-              enabled: true
-            }
-          }
-        };
-
-        this.chartAreaSparkline3Options = {
-          series: [
-            {
-              data: this.randomizeArray(sparkLineData)
-            }
-          ],
-          colors: ["#67D0BF"],
-          title: {
-            text: "$135,965",
-            offsetX: 0,
-            style: {
-              fontSize: "24px"
-            }
-          },
-          subtitle: {
-            text: "Profits",
-            offsetX: 0,
-            style: {
-              fontSize: "14px"
-            }
-          }
-        };
-
-        this.chartLineSparkline3Options = {
-          series: [
-            {
-              name: "chart-line-sparkline",
-              data: this.randomizeArray(sparkLineData.slice(0, 10))
-            }
-          ]
-        };
-
-
-        this.chartBarSparkline3Options = {
-          series: [
-            {
-              name: "chart-bar-sparkline",
-              data: this.randomizeArray(sparkLineData.slice(0, 10))
-            }
-          ]
-        };
+    constructor(private dataService: DataServiceService, private stockService: StockServiceService, private route: ActivatedRoute, private router: Router) {
+      this.getTopStock();
   }
 
+    togglePopup(): void {
+        this.stockService.predict(firstStockCode).subscribe(data => {this.predictData = data;
+          console.log(this.predictData)
+        });
+        this.isPopupOpen = !this.isPopupOpen;
+    }
+
   ngOnInit(): void {
+
     this.route.params.pipe(
 
       concatMap((params : any) =>{
@@ -141,6 +150,7 @@ export class StockDetailComponent implements OnInit {
             firstStockHistoryData = data.map((data:any)=>{
               return {...data, time: new Date(data.time)}})
               firstStockHistoryData.title = firstStockCode;
+              this.getStockToday(firstStockCode);
               this.data = [firstStockHistoryData];
           });
         }
@@ -155,6 +165,7 @@ export class StockDetailComponent implements OnInit {
               firstStockHistoryData = data1.map((data:any)=>{
                 return {...data, time: new Date(data.time)}})
                 firstStockHistoryData.title = firstStockCode;
+                this.getStockToday(firstStockCode);
               secondStockHistoryData = data2.map((data:any)=>{
                 return {...data, time: new Date(data.time)}})
                 secondStockHistoryData.title = secondStockCode;
@@ -204,4 +215,195 @@ export class StockDetailComponent implements OnInit {
     return array;
   }
 
+
+  public getStockToday(name:string):void{
+    this.stockService.getStocksToday().subscribe(stock => {
+      this.allSymStocks = stock.map((stock : any) => stock.sym);
+      this.stockToday = stock.find((item:any) =>item.sym == name);
+    })
+  }
+
+  exportStockReport(){
+    this.exportPdf();
+
+  }
+
+  exportPdf() {
+    this.stockService.export(firstStockCode).subscribe(data => saveAs(data, `report.csv`));
+}
+
+
+  getTopStock():any {
+      listTopStockName.forEach((item:any) =>{
+        this.stockService.getStockByCode(item).subscribe(data => {
+
+          this.topStocks.push(data.slice(Math.max(data.length - 20, 0)).map((item : any)=>{
+            return item.close;
+          }))
+          console.log(this.topStocks)
+          console.log(this.topStocks)
+          this.setUpTopStocks()
+        });
+      })
+
+  }
+
+  // async initialSparrAreaChart() {
+  //   await this.getTopStock();
+  //   await this.setUpTopStocks();
+  //   // Code after the first and second async operations
+  // }
+
+  setUpTopStocks() :any{
+    console.log(2222222222);
+    console.log(this.topStocks[0])
+    window.Apex = {
+      stroke: {
+        width: 2
+      },
+      markers: {
+        size: 0
+      },
+      tooltip: {
+        fixed: {
+          enabled: true
+        }
+      }
+    };
+
+    this.chartAreaSparkline3Options = {
+      series: [
+        {
+          data: this.topStocks[0]
+        }
+      ],
+      colors: ["#67D0BF"],
+      title: {
+        text: "$135,965",
+        offsetX: 0,
+        style: {
+          fontSize: "24px"
+        }
+      },
+      subtitle: {
+        text: "Profits",
+        offsetX: 0,
+        style: {
+          fontSize: "14px"
+        }
+      }
+    };
+
+    this.chartAreaSparkline3Options1 = {
+      series: [
+        {
+          data: this.topStocks[1]
+        }
+      ],
+      colors: ["#67D0BF"],
+      title: {
+        text: "$135,965",
+        offsetX: 0,
+        style: {
+          fontSize: "24px"
+        }
+      },
+      subtitle: {
+        text: "Profits",
+        offsetX: 0,
+        style: {
+          fontSize: "14px"
+        }
+      }
+    };
+
+    this.chartAreaSparkline3Options2 = {
+      series: [
+        {
+          data: this.topStocks[2]
+        }
+      ],
+      colors: ["#67D0BF"],
+      title: {
+        text: "$135,965",
+        offsetX: 0,
+        style: {
+          fontSize: "24px"
+        }
+      },
+      subtitle: {
+        text: "Profits",
+        offsetX: 0,
+        style: {
+          fontSize: "14px"
+        }
+      }
+    };
+
+    this.chartAreaSparkline3Options3 = {
+      series: [
+        {
+          data: this.topStocks[3]
+        }
+      ],
+      colors: ["#67D0BF"],
+      title: {
+        text: "$135,965",
+        offsetX: 0,
+        style: {
+          fontSize: "24px"
+        }
+      },
+      subtitle: {
+        text: "Profits",
+        offsetX: 0,
+        style: {
+          fontSize: "14px"
+        }
+      }
+    };
+
+    this.chartAreaSparkline3Options4 = {
+      series: [
+        {
+          data: this.topStocks[4]
+        }
+      ],
+      colors: ["#67D0BF"],
+      title: {
+        text: "$135,965",
+        offsetX: 0,
+        style: {
+          fontSize: "24px"
+        }
+      },
+      subtitle: {
+        text: "Profits",
+        offsetX: 0,
+        style: {
+          fontSize: "14px"
+        }
+      }
+    };
+  }
+
+
+  openModal() {
+    this.display = "block";
+  }
+  onCloseHandled() {
+    this.display = "none";
+  }
+
+  compareStock(){
+    if(this.selectedStock1 !=null && this.selectedStock2 !=null){
+      this.router.navigate(['/detail',this.selectedStock1, this.selectedStock2]);
+    }else{
+      alert("Please enter choosing 2 stock to compare");
+    }
+  }
+
+  moveToHome(){
+    this.router.navigate(['/dashboard']);
+  }
 }
