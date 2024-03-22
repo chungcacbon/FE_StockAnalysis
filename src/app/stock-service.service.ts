@@ -8,26 +8,27 @@ import { Observable } from 'rxjs';
 export class StockServiceService {
 
   constructor( private http: HttpClient) { }
+  baseUrl = "https://chungdvhe160135.bsite.net/";
 
   getStocksToday():Observable<any> {
-    return this.http.get<any>("https://localhost:7047/getall/VN30");
+    return this.http.get<any>(this.baseUrl+"getall/VN30");
   }
 
   getStockByCode(code: string): Observable<any> {
-    return this.http.get<any>("https://localhost:7047/"+code)
+    return this.http.get<any>(this.baseUrl+code)
   }
 
   getExport(name:string): Observable<any> {
-    return this.http.get<any>("https://localhost:7047/"+name);
+    return this.http.get<any>(this.baseUrl+name);
   }
 
   export(name:string): Observable<any> {
-    return this.http.get("https://localhost:7047/StockAnalysis/api/export?ids="+name,
+    return this.http.get(this.baseUrl+"StockAnalysis/api/export?ids="+name,
         {responseType: 'blob'});
 }
 
   predict(name:string): Observable<any> {
-    return this.http.get("https://localhost:7047/StockAnalysis/api/predict?id="+name);
+    return this.http.get(this.baseUrl+"StockAnalysis/api/predict?id="+name);
   }
 
 }

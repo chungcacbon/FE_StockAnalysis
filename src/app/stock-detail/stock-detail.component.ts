@@ -81,7 +81,6 @@ let firstStockCode :string;
 let secondStockCode :string;
 let listTopStockName :string[] = ["FPT","GVR","PLX","SSI","VCB"];
 let top5Stocks :any[];
-let allSymStocks :string[];
 @Component({
   selector: 'app-stock-detail',
   templateUrl: './stock-detail.component.html',
@@ -99,8 +98,12 @@ export class StockDetailComponent implements OnInit {
   topStocks:any[]=[];
   isPopupOpen: boolean = false;
   predictData:any;
+  public listTopStockInfo : any[] = [];
+  public topStockChart : Partial<ChartOptions>[] = [];
   @ViewChild("chart") chart?: ChartComponent;
   public chartOptions?: Partial<ChartOptions>;
+
+
   public chartAreaSparkline3Options?: Partial<ChartOptions>;
   public chartAreaSparkline3Options1?: Partial<ChartOptions>;
   public chartAreaSparkline3Options2?: Partial<ChartOptions>;
@@ -127,7 +130,8 @@ export class StockDetailComponent implements OnInit {
 
   public data: any;
     constructor(private dataService: DataServiceService, private stockService: StockServiceService, private route: ActivatedRoute, private router: Router) {
-      this.getTopStock();
+
+     // this.getTopStock();
   }
 
     togglePopup(): void {
@@ -220,6 +224,51 @@ export class StockDetailComponent implements OnInit {
     this.stockService.getStocksToday().subscribe(stock => {
       this.allSymStocks = stock.map((stock : any) => stock.sym);
       this.stockToday = stock.find((item:any) =>item.sym == name);
+
+      for(let i = 0; i < 5; i++) {
+        let sym = this.randomStock(this.allSymStocks);
+        this.listTopStockInfo?.push(stock.find((item:any) =>item.sym == sym));
+        this.stockService.getStockByCode(sym).subscribe(data => {
+
+          this.topStocks.push(data.slice(Math.max(data.length - 20, 0)).map((item : any)=>{
+            return item.close;
+          }))
+          console.log(this.topStocks)
+          if(this.topStocks[i] != null ){
+
+            let chartAreaSparklineItemOptions : Partial<ChartOptions> = {
+              series: [
+                {
+                  data: this.topStocks[i]
+                }
+              ],
+              colors: ["#67D0BF"],
+              title: {
+                text: "$135,965",
+                offsetX: 0,
+                style: {
+                  fontSize: "24px"
+                }
+              },
+              subtitle: {
+                text: "Profits",
+                offsetX: 0,
+                style: {
+                  fontSize: "14px"
+                }
+              }
+            };
+            this.topStockChart?.push(chartAreaSparklineItemOptions);
+          }
+          console.log(this.topStockChart);
+          console.log(this.topStocks)
+
+        });
+
+
+      }
+
+
     })
   }
 
@@ -234,6 +283,7 @@ export class StockDetailComponent implements OnInit {
 
 
   getTopStock():any {
+
       listTopStockName.forEach((item:any) =>{
         this.stockService.getStockByCode(item).subscribe(data => {
 
@@ -405,5 +455,10 @@ export class StockDetailComponent implements OnInit {
 
   moveToHome(){
     this.router.navigate(['/dashboard']);
+  }
+
+  randomStock(listStock : string[]):string{
+  const randomIndex = Math.floor(Math.random() * listStock.length);
+  return listStock[randomIndex];
   }
 }

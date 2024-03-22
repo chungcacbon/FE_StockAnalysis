@@ -46,25 +46,25 @@
 
         <div class="stock-content">
             <div class="top-stock">
-              <div class="stockBox">
+              <div class="stockBox" *ngFor="let item of topStockChart; let id = index">
                 <div class="box-head">
-                  <span class ="stock-name">FPT</span>
+                  <span class ="stock-name">{{listTopStockInfo[id].sym}}</span>
                   <div class="stock-status">
-                    <p style="font-weight: bold;">FPT</p>
-                    <p class="green">+11.39 +0.88%</p>
+                    <p style="font-weight: bold;">{{listTopStockInfo[id].sym}}</p>
+                    <p class="green">+{{listTopStockInfo[id].c*(listTopStockInfo[id].changePc/100)| number:'1.1-1'}}  +{{listTopStockInfo[id].changePc}}%</p>
                 </div>
                 </div>
                 <div class="box-body">
                   <div class="box-coefficient">
                     <p class="text-italic">Total</p>
-                    <p class="text-bold">$10.053.55</p>
+                    <p class="text-bold">${{listTopStockInfo[id].lot}}</p>
                   </div>
                   <div class="chart-spark">
                     <apx-chart
                       #chartspark2
-                      [series]="chartAreaSparkline3Options?.series!"
+                      [series]="item.series!"
                       [chart]="commonAreaSparlineOptions.chart!"
-                      [colors]="chartAreaSparkline3Options?.colors!"
+                      [colors]="item.colors!"
 
                     ></apx-chart>
                   </div>
@@ -72,109 +72,7 @@
 
               </div>
 
-              <div class="stockBox">
-                <div class="box-head">
-                  <span class ="stock-name">GVR</span>
-                  <div class="stock-status">
-                    <p style="font-weight: bold;">GVR</p>
-                    <p class="green">+11.39 +0.68%</p>
-                </div>
-                </div>
-                <div class="box-body">
-                  <div class="box-coefficient">
-                    <p class="text-italic">Total</p>
-                    <p class="text-bold">$15.215.70</p>
-                  </div>
-                  <div class="chart-spark">
-                    <apx-chart
-                      #chartspark2
-                      [series]="chartAreaSparkline3Options1?.series!"
-                      [chart]="commonAreaSparlineOptions.chart!"
-                      [colors]="chartAreaSparkline3Options?.colors!"
 
-                    ></apx-chart>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="stockBox">
-                <div class="box-head">
-                  <span class ="stock-name">SSI</span>
-                  <div class="stock-status">
-                    <p style="font-weight: bold;">SSI</p>
-                    <p class="green">+7.6 +1.36%</p>
-                </div>
-                </div>
-                <div class="box-body">
-                  <div class="box-coefficient">
-                    <p class="text-italic">Total</p>
-                    <p class="text-bold">$15.215.70</p>
-                  </div>
-                  <div class="chart-spark">
-                    <apx-chart
-                      #chartspark2
-                      [series]="chartAreaSparkline3Options2?.series!"
-                      [chart]="commonAreaSparlineOptions.chart!"
-                      [colors]="chartAreaSparkline3Options?.colors!"
-
-                    ></apx-chart>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="stockBox">
-                <div class="box-head">
-                  <span class ="stock-name">VCB</span>
-                  <div class="stock-status">
-                    <p style="font-weight: bold;">VCB</p>
-                    <p class="green">+9.2 +0.54%</p>
-                </div>
-                </div>
-                <div class="box-body">
-                  <div class="box-coefficient">
-                    <p class="text-italic">Total</p>
-                    <p class="text-bold">$15.215.70</p>
-                  </div>
-                  <div class="chart-spark">
-                    <apx-chart
-                      #chartspark2
-                      [series]="chartAreaSparkline3Options3?.series!"
-                      [chart]="commonAreaSparlineOptions.chart!"
-                      [colors]="chartAreaSparkline3Options?.colors!"
-
-                    ></apx-chart>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="stockBox">
-                <div class="box-head">
-                  <span class ="stock-name">PLX</span>
-                  <div class="stock-status">
-                    <p style="font-weight: bold;">PLX</p>
-                    <p class="green">+11.39 +0.68%</p>
-                </div>
-                </div>
-                <div class="box-body">
-                  <div class="box-coefficient">
-                    <p class="text-italic">Total</p>
-                    <p class="text-bold">$15.215.70</p>
-                  </div>
-                  <div class="chart-spark">
-                    <apx-chart
-                      #chartspark2
-                      [series]="chartAreaSparkline3Options4?.series!"
-                      [chart]="commonAreaSparlineOptions.chart!"
-                      [colors]="chartAreaSparkline3Options?.colors!"
-
-                    ></apx-chart>
-                  </div>
-                </div>
-
-              </div>
 
             </div>
 
