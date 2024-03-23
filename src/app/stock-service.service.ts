@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class StockServiceService {
 
   constructor( private http: HttpClient) { }
-  baseUrl = "https://chungdvhe160135.bsite.net/";
-
+  //baseUrl = "https://chungdvhe160135.bsite.net/";
+  baseUrl = "https://localhost:7047/"
   getStocksToday():Observable<any> {
     return this.http.get<any>(this.baseUrl+"getall/VN30");
   }
@@ -29,6 +29,10 @@ export class StockServiceService {
 
   predict(name:string): Observable<any> {
     return this.http.get(this.baseUrl+"StockAnalysis/api/predict?id="+name);
+  }
+
+  predict_gemini(name:string): Observable<any> {
+    return this.http.get(this.baseUrl+"StockAnalysis/api/predict/analyze?id="+name);
   }
 
 }

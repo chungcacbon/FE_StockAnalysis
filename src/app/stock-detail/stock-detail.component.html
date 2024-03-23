@@ -11,14 +11,21 @@
       <div class="popup-content">
       <h3>Dự đoán cổ phiếu</h3>
 
-      <div>Tỉ lệ tăng giá: <span style="color :#0f0 ;">{{predictData.increaseProbability*100}}%</span> - Lượng tăng: {{predictData.increasePercent}}</div>
+      <div>Tỉ lệ tăng giá: <span style="color :#0f0 ;">{{predictData.increaseProbability*100| number:'1.1-1' }}%</span> - Lượng tăng: {{predictData.increasePercent}}</div>
       <div></div>
-      <div>Tỉ lệ giảm giá: <span style="color :#ff3737;">{{predictData.decreaseProbability*100}}%</span> - Tỉ lệ tăng giá: {{predictData.decreasePercent}}</div>
+      <div>Tỉ lệ giảm giá: <span style="color :#ff3737;">{{predictData.decreaseProbability*100| number:'1.1-1' }}%</span> - Tỉ lệ tăng giá: {{predictData.decreasePercent}}</div>
       <div></div>
       <br>
       <i>Nhưng số liệu trên được dựa vào lịch sử giá 30 ngày và chỉ mang tính chất tham khảo!</i>
     </div>
  </div>
+
+ <div class="popup-overlay" *ngIf="isAskingGemini" (click)="CloseGeminiResponse()">
+    <div class="popup-content">
+      <h3>Response from Gemini!</h3>
+      {{geminiResponse.length>0?geminiResponse:"Loading..."}}
+    </div>
+</div>
  <div class="header" style="display: flex;">
         <img (click)="moveToHome()" src="../../assets/logo.svg" alt="">
         <h2>SFlare</h2>
@@ -132,6 +139,9 @@
                 <div class="item-info">
                   <p class="info-key">Previous Close</p>
                   <p class="info-value">INDEX</p>
+                </div>
+                <div>
+                  <img style="width: 100px;" (click)="askGemini()" src="../../assets/gemini.svg" alt="">
                 </div>
               </div>
 

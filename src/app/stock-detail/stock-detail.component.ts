@@ -102,7 +102,8 @@ export class StockDetailComponent implements OnInit {
   public topStockChart : Partial<ChartOptions>[] = [];
   @ViewChild("chart") chart?: ChartComponent;
   public chartOptions?: Partial<ChartOptions>;
-
+  public geminiResponse :string = "";
+  public isAskingGemini: boolean = false;
 
   public chartAreaSparkline3Options?: Partial<ChartOptions>;
   public chartAreaSparkline3Options1?: Partial<ChartOptions>;
@@ -225,7 +226,7 @@ export class StockDetailComponent implements OnInit {
       this.allSymStocks = stock.map((stock : any) => stock.sym);
       this.stockToday = stock.find((item:any) =>item.sym == name);
 
-      for(let i = 0; i < 5; i++) {
+      for(let i = 0; i < 6; i++) {
         let sym = this.randomStock(this.allSymStocks);
         this.listTopStockInfo?.push(stock.find((item:any) =>item.sym == sym));
         this.stockService.getStockByCode(sym).subscribe(data => {
@@ -461,4 +462,21 @@ export class StockDetailComponent implements OnInit {
   const randomIndex = Math.floor(Math.random() * listStock.length);
   return listStock[randomIndex];
   }
+  askGemini(){
+    this.isAskingGemini = true;
+    this.stockService.predict_gemini(firstStockCode).subscribe(data=>{
+      console.log(data.candidates[0].content.parts[0].text)
+      try{
+        this.geminiResponse = data.candidates[0].content.parts[0].text;
+      }catch(e){
+        this.geminiResponse = "Error orcurs during ask Gemini please check your connection and try again.";
+      }
+
+    });
+  }
+
+  CloseGeminiResponse(){
+    this.isAskingGemini = false;
+  }
+
 }
